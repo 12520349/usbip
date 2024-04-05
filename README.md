@@ -108,6 +108,9 @@ and enable and start the service:
 systemctl enable usbip@1-1.3
 systemctl start usbip@1-1.3
 ```
+
+### run jupyter lab
+
 ```
 import paramiko
 import re
