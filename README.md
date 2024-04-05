@@ -108,4 +108,28 @@ and enable and start the service:
 systemctl enable usbip@1-1.3
 systemctl start usbip@1-1.3
 ```
+```
+import paramiko
+import re
+# Tạo một SSH client
+ssh = paramiko.SSHClient()
+ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+```
+```
+# Kết nối đến server
+raspi_ip = 'usbip05.local'
+ssh.connect(raspi_ip, port=22, username='pi', password='0xxxxxx70')
+
+# Thực hiện một lệnh trên server
+stdin, stdout, stderr = ssh.exec_command('sudo usbip list -l|grep 1414')
+result = stdout.read().decode()
+busids = re.findall(r'busid\s([0-9\-\.]+)', result)
+print("Total busids found:", len(busids))
+
+# Join the found busids into a single string separated by commas
+result = ','.join(busids)
+for busid in busids:
+    print('systemctl enable usbip-bind@'+busid+'.service')
+    print('systemctl start usbip-bind@'+busid+'.service')
+```
 
